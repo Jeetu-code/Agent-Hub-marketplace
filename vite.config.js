@@ -8,6 +8,7 @@ export default defineConfig({
     host: '0.0.0.0',
     open: false,
     middlewareMode: false,
+    allowedHosts: true,
     hmr: {
       protocol: 'ws',
       host: '0.0.0.0',
