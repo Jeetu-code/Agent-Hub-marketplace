@@ -1,187 +1,70 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { agents } from '../lib/mockData'
+
+function RatingStars({ rating }) {
+  return <span className="text-amber-300">{'★'.repeat(Math.round(rating))}{'☆'.repeat(5 - Math.round(rating))}</span>
+}
 
 export default function AgentDetails() {
   const { id } = useParams()
-  const navigate = useNavigate()
-  const agent = agents.find(a => a.id === parseInt(id))
-  const [purchased, setPurchased] = useState(false)
+  const [prompt, setPrompt] = useState('')
 
-  if (!agent) {
-    return (
-      <div className="min-h-screen pt-24 px-4 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Agent Not Found</h1>
-          <button
-            onClick={() => navigate('/marketplace')}
-            className="px-6 py-2 bg-cyan-500 text-slate-950 rounded-lg font-bold hover:bg-cyan-400"
-          >
-            Back to Marketplace
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const agent = useMemo(
+    () => agents.find((item) => item.id === id) || agents[0],
+    [id],
+  )
 
   return (
-    <div className="min-h-screen pt-24 px-4 pb-20">
-      <div className="max-w-5xl mx-auto">
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-8 text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2"
-        >
-          ← Back
-        </button>
+    <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 pb-8 pt-10 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="mb-4 text-4xl">{agent.icon}</div>
+        <h1 className="text-3xl font-semibold text-white">{agent.name}</h1>
+        <p className="mt-3 text-slate-300">{agent.description}</p>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-        >
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-lg overflow-hidden mb-8 glow"
-            >
-              <img
-                src={agent.image}
-                alt={agent.name}
-                className="w-full h-96 object-cover"
-              />
-            </motion.div>
-
-            {/* Details */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-8"
-            >
-              <div>
-                <h1 className="text-5xl font-bold gradient-text mb-4">
-                  {agent.name}
-                </h1>
-                <p className="text-xl text-slate-300 mb-6">
-                  {agent.description}
-                </p>
-
-                {/* Rating */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="flex text-2xl">
-                    {[...Array(5)].map((_, i) => (
-                      <span
-                        key={i}
-                        className={i < Math.floor(agent.rating) ? 'text-cyan-400' : 'text-slate-600'}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                  <span className="text-lg text-slate-300">
-                    {agent.rating} ({agent.reviews.toLocaleString()} reviews)
-                  </span>
-                </div>
-
-                {/* Creator Info */}
-                <div className="glass p-6 rounded-lg mb-8">
-                  <p className="text-slate-300 mb-2">Created by</p>
-                  <p className="text-2xl font-bold text-cyan-400">{agent.creator}</p>
-                </div>
-              </div>
-
-              {/* Features */}
-              <div>
-                <h2 className="text-3xl font-bold mb-6 gradient-text">
-                  Key Features
-                </h2>
-                <div className="space-y-4">
-                  {agent.features.map((feature, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 + index * 0.05 }}
-                      className="glass p-4 rounded-lg flex items-center gap-4"
-                    >
-                      <div className="text-cyan-400 text-2xl">✓</div>
-                      <div className="text-lg text-slate-200">{feature}</div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div>
-                <h3 className="text-xl font-bold mb-4">Tags</h3>
-                <div className="flex flex-wrap gap-3">
-                  {agent.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-slate-800 text-cyan-400 px-4 py-2 rounded-lg text-sm font-semibold"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+        <div className="mt-6 space-y-3 text-sm text-slate-200">
+          <p><span className="text-slate-400">Category:</span> {agent.category}</p>
+          <p><span className="text-slate-400">Creator:</span> {agent.creator}</p>
+          <p className="flex items-center gap-2"><span className="text-slate-400">Rating:</span> <RatingStars rating={agent.rating} /> {agent.rating}</p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {agent.tags.map((tag) => (
+              <span key={tag} className="rounded-full border border-cyan-200/30 bg-cyan-300/10 px-3 py-1 text-xs text-cyan-100">
+                #{tag}
+              </span>
+            ))}
           </div>
+        </div>
+      </section>
 
-          {/* Sidebar */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="glass p-8 rounded-lg sticky top-24 glow"
-            >
-              <div className="text-4xl font-bold gradient-text mb-6 text-center">
-                ${agent.price}
-              </div>
+      <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <h2 className="text-xl font-semibold text-white">Interactive Demo</h2>
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="mt-4 min-h-36 w-full rounded-xl border border-white/20 bg-slate-950/70 p-3 text-sm text-white outline-none placeholder:text-slate-400 focus:border-cyan-300"
+          placeholder="Paste your resume or ask a question..."
+        />
+        <div className="mt-4 flex gap-2">
+          <button className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]">
+            Run Agent
+          </button>
+          <button
+            onClick={() => setPrompt('')}
+            className="rounded-xl border border-white/20 px-4 py-2 text-sm font-semibold text-slate-100"
+          >
+            Clear Input
+          </button>
+        </div>
 
-              <button
-                onClick={() => setPurchased(true)}
-                className="w-full py-4 bg-cyan-500 text-slate-950 font-bold rounded-lg hover:bg-cyan-400 transition mb-4"
-              >
-                {purchased ? 'Purchased ✓' : 'Purchase Now'}
-              </button>
-
-              <button
-                className="w-full py-4 border-2 border-cyan-500 text-cyan-400 font-bold rounded-lg hover:bg-cyan-500/10 transition"
-              >
-                Add to Wishlist
-              </button>
-
-              {/* Stats */}
-              <div className="mt-8 space-y-4">
-                <div className="border-t border-cyan-500/20 pt-4">
-                  <p className="text-slate-400 text-sm mb-1">Downloads</p>
-                  <p className="text-2xl font-bold text-cyan-400">
-                    {agent.downloads.toLocaleString()}
-                  </p>
-                </div>
-                <div className="border-t border-cyan-500/20 pt-4">
-                  <p className="text-slate-400 text-sm mb-1">Category</p>
-                  <p className="text-xl font-bold text-cyan-400">
-                    {agent.category}
-                  </p>
-                </div>
-                <div className="border-t border-cyan-500/20 pt-4">
-                  <p className="text-slate-400 text-sm mb-1">Rating</p>
-                  <p className="text-xl font-bold text-cyan-400">
-                    {agent.rating}/5.0
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </div>
+        <div className="mt-5 rounded-xl border border-white/10 bg-slate-900/70 p-4">
+          <p className="mb-2 text-xs uppercase tracking-wide text-slate-400">AI Result</p>
+          <p className="text-sm text-slate-200">
+            {prompt
+              ? `Demo output: ${agent.name} processed your input and generated a clean, structured response preview.`
+              : 'Run the agent to see a styled response panel output.'}
+          </p>
+        </div>
+      </section>
     </div>
   )
 }

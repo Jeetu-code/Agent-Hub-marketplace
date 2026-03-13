@@ -1,165 +1,47 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import AgentCard from '../components/AgentCard'
+import { agents } from '../lib/mockData'
 
 export default function Landing() {
-  const container = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  }
-
   return (
-    <div className="min-h-screen pt-20 px-4 overflow-hidden">
-      {/* Hero Section */}
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="text-center py-20"
-        >
-          <motion.h1
-            variants={item}
-            className="text-5xl md:text-7xl font-bold mb-6 gradient-text"
+    <div className="mx-auto w-full max-w-7xl px-4 pb-8 pt-10 sm:px-6 lg:px-8">
+      <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-indigo-950/40 to-cyan-950/30 p-8 shadow-2xl shadow-cyan-950/20 md:p-12">
+        <p className="mb-4 inline-flex rounded-full border border-cyan-300/40 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+          AgentHub – AI Agents Discovery Platform
+        </p>
+        <h1 className="max-w-3xl text-4xl font-semibold text-white md:text-6xl">
+          Discover and Use Powerful AI Agents
+        </h1>
+        <p className="mt-4 max-w-2xl text-slate-300 md:text-lg">
+          Developers publish specialized AI agents, and users explore, evaluate, and run them from one modern marketplace.
+        </p>
+
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <input
+            placeholder="Search agents by name, use case, or category..."
+            className="w-full rounded-xl border border-white/20 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400 focus:border-cyan-300"
+          />
+          <Link
+            to="/marketplace"
+            className="rounded-xl bg-cyan-300 px-6 py-3 text-center text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
           >
-            AI Agents Marketplace
-          </motion.h1>
-
-          <motion.p
-            variants={item}
-            className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto"
-          >
-            Discover, create, and deploy AI-powered agents. Build your digital workforce today.
-          </motion.p>
-
-          <motion.div
-            variants={item}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link to="/marketplace">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-cyan-500 text-slate-950 font-bold rounded-lg hover:bg-cyan-400 transition glow"
-              >
-                Explore Agents
-              </motion.button>
-            </Link>
-
-            <Link to="/publish">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-cyan-500 text-cyan-400 font-bold rounded-lg hover:bg-cyan-500/10 transition"
-              >
-                Publish Yours
-              </motion.button>
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 py-20"
-        >
-          {[
-            { number: '500+', label: 'AI Agents' },
-            { number: '60K+', label: 'Active Users' },
-            { number: '1M+', label: 'Total Downloads' },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ y: -5 }}
-              className="glass p-8 rounded-lg text-center glow"
-            >
-              <div className="text-4xl font-bold gradient-text mb-2">
-                {stat.number}
-              </div>
-              <div className="text-slate-300">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Features Section */}
-        <div className="py-20">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-4xl font-bold text-center mb-16 gradient-text"
-          >
-            Why Choose AgentHub?
-          </motion.h2>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                title: 'Easy Discovery',
-                description: 'Browse thousands of AI agents across multiple categories',
-                icon: '🔍',
-              },
-              {
-                title: 'Quick Setup',
-                description: 'Get started in minutes with simple configuration',
-                icon: '⚡',
-              },
-              {
-                title: 'Monetize',
-                description: 'Start earning by creating and selling your own agents',
-                icon: '💰',
-              },
-              {
-                title: 'Community',
-                description: 'Join a vibrant community of AI creators',
-                icon: '👥',
-              },
-              {
-                title: 'Analytics',
-                description: 'Track performance with detailed insights',
-                icon: '📊',
-              },
-              {
-                title: 'Support',
-                description: '24/7 support from our dedicated team',
-                icon: '🤝',
-              },
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ y: -8 }}
-                className="glass p-8 rounded-lg glow-pink"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-cyan-400">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-300">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
+            Explore Agents
+          </Link>
         </div>
-      </div>
+      </section>
+
+      <section className="mt-12">
+        <div className="mb-6 flex items-end justify-between">
+          <h2 className="text-2xl font-semibold text-white">Marketplace Highlights</h2>
+          <Link to="/marketplace" className="text-sm text-cyan-200 hover:text-cyan-100">View all</Link>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {agents.slice(0, 4).map((agent) => (
+            <AgentCard key={agent.id} agent={agent} />
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
