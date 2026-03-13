@@ -1,94 +1,65 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { Link, NavLink } from 'react-router-dom'
+
+const navItems = [
+  { label: 'Explore Agents', to: '/marketplace' },
+  { label: 'Publish Agent', to: '/publish' },
+  { label: 'Leaderboard', to: '/leaderboard' },
+]
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  const navItems = [
-    { name: 'Marketplace', path: '/marketplace' },
-    { name: 'Leaderboard', path: '/leaderboard' },
-    { name: 'Publish', path: '/publish' },
-  ]
+  const linkClass = ({ isActive }) =>
+    `text-sm font-medium transition ${isActive ? 'text-cyan-300' : 'text-slate-200 hover:text-white'}`
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass border-b border-cyan-500/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              className="text-2xl font-bold gradient-text"
-            >
-              AgentHub
-            </motion.div>
-          </Link>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="text-xl font-bold tracking-tight text-white">
+          Agent<span className="text-cyan-300">Hub</span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="hover:text-cyan-400 transition duration-300"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+        <nav className="hidden items-center gap-8 md:flex">
+          {navItems.map((item) => (
+            <NavLink key={item.to} to={item.to} className={linkClass}>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-cyan-400 hover:text-cyan-300"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
+        <button className="hidden rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-105 md:block">
+          Connect Wallet
+        </button>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden border-t border-cyan-500/20"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="block px-3 py-2 rounded-md hover:bg-slate-800 transition"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        <button
+          aria-label="Toggle menu"
+          className="rounded-md border border-white/20 p-2 text-slate-100 md:hidden"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          ☰
+        </button>
       </div>
-    </nav>
+
+      {open && (
+        <div className="border-t border-white/10 bg-slate-900/95 px-4 py-4 md:hidden">
+          <div className="space-y-3">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className="block text-sm font-medium text-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <button className="mt-2 w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900">
+              Connect Wallet
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
   )
 }
